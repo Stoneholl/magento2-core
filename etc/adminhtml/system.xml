@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="stoneholl" translate="label" sortOrder="850">
+            <label>Stoneholl</label>
+        </tab>
+        <section id="stoneholl_core" translate="label" type="text" sortOrder="10"
+                 showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Core</label>
+            <tab>stoneholl</tab>
+            <resource>Stoneholl_Core::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1">
+                <label>Marketplace Navigation</label>
+                <field id="marketplace_url" translate="label comment" type="text" sortOrder="10"
+                       showInDefault="1" canRestore="1">
+                    <label>Marketplace URL</label>
+                    <comment>
+                        HTTPS address for marketplace links. Connector also uses this address with /account
+                        when no Account URL override is set. This does not change the API endpoint.
+                    </comment>
+                    <validate>required-entry validate-url</validate>
+                    <backend_model>Stoneholl\Core\Model\Config\Backend\MarketplaceUrl</backend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

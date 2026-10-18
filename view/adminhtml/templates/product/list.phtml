@@ -1,0 +1,50 @@
+<?php
+/** @var \Stoneholl\Core\Block\Adminhtml\Product\ListBlock $block */
+// phpcs:disable Magento2.Legacy.EscapeMethodsOnBlockClass.Found -- required for Magento 2.3 compatibility.
+$products = $block->getProducts();
+$marketplaceUrl = $block->getMarketplaceUrl();
+$feedbackUrl = $block->getFeedbackUrl();
+?>
+<div class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Installed Stoneholl Products')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <?php if ($marketplaceUrl !== ''): ?>
+            <p>
+                <a class="action-default" href="<?= $block->escapeUrl($marketplaceUrl) ?>"
+                   target="_blank" rel="noopener noreferrer">
+                    <?= $block->escapeHtml(__('Visit Stoneholl Marketplace')) ?>
+                </a>
+                <a class="action-default" href="<?= $block->escapeUrl($feedbackUrl) ?>"
+                   target="_blank" rel="noopener noreferrer">
+                    <?= $block->escapeHtml(__('Suggest an Improvement')) ?>
+                </a>
+            </p>
+        <?php endif; ?>
+        <?php if (!$products): ?>
+            <p><?= $block->escapeHtml(__('No Stoneholl products have registered local metadata.')) ?></p>
+        <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                <tr>
+                    <th class="data-grid-th"><?= $block->escapeHtml(__('Product')) ?></th>
+                    <th class="data-grid-th"><?= $block->escapeHtml(__('Code')) ?></th>
+                    <th class="data-grid-th"><?= $block->escapeHtml(__('Magento Modules')) ?></th>
+                    <th class="data-grid-th"><?= $block->escapeHtml(__('Composer Packages')) ?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($products as $product): ?>
+                    <tr>
+                        <td><?= $block->escapeHtml($product->getName()) ?></td>
+                        <td><?= $block->escapeHtml($product->getCode()) ?></td>
+                        <td><?= $block->escapeHtml(implode(', ', $product->getModuleNames())) ?></td>
+                        <td><?= $block->escapeHtml(implode(', ', $product->getPackageNames())) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </div>
+</div>

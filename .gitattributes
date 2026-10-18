@@ -1,0 +1,6 @@
+/.github export-ignore
+/release.json export-ignore
+/.gitattributes export-ignore
+/Test export-ignore
+/phpunit.xml.dist export-ignore
+/phpcs.xml.dist export-ignore

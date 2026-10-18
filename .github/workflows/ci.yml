@@ -1,0 +1,90 @@
+name: Public release CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Publish the validated main snapshot as an immutable release
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: public-core-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.metadata.outputs.publish }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify snapshot and metadata
+        id: metadata
+        run: |
+          python3 .github/release-tools/package_snapshot.py verify
+          python3 - <<'PYCODE'
+          import json, os
+          metadata=json.load(open('release.json'))
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write('publish=' + str(metadata['publish']).lower() + '\n')
+          PYCODE
+  validate:
+    needs: snapshot
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - php: '7.4'
+            composer: '2.2'
+          - php: '8.0'
+            composer: '2.2'
+          - php: '8.5'
+            composer: v2
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, json
+          coverage: none
+          tools: composer:${{ matrix.composer }}
+      - name: Composer metadata
+        env:
+          COMPOSER_ROOT_VERSION: '1.0.0'
+        run: composer validate --no-check-publish --no-ansi
+      - name: PHP syntax
+        run: find . -path './.git' -prune -o -type f -name '*.php' -print0 | xargs -0 -r -n 1 php -l
+      - name: XML and JSON syntax
+        run: |
+          php -r '
+          foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator(".", FilesystemIterator::SKIP_DOTS)) as $f) {
+              if (strpos($f->getPathname(), "/.git/") !== false) { continue; }
+              if ($f->getExtension() === "xml") { $d = new DOMDocument(); if (!$d->load($f->getPathname())) { exit(1); } }
+              if ($f->getExtension() === "json") { json_decode(file_get_contents($f->getPathname()), true, 512, JSON_THROW_ON_ERROR); }
+          }'
+  publish:
+    needs: [snapshot, validate]
+    if: >-
+      github.repository == 'Stoneholl/module-core' && github.ref == 'refs/heads/main' &&
+      ((github.event_name == 'push' && needs.snapshot.outputs.publish == 'true') ||
+      (github.event_name == 'workflow_dispatch' && inputs.publish_release))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Publish verified immutable assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/release-tools/publish_release.py

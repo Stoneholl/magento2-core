@@ -1,0 +1,21 @@
+{
+    "name": "stoneholl/module-core",
+    "description": "Offline shared administration and product registry infrastructure for Stoneholl Magento modules.",
+    "type": "magento2-module",
+    "license": "MIT",
+    "require": {
+        "php": "~7.4.0||~8.0.0||~8.1.0||~8.2.0||~8.3.0||~8.4.0||~8.5.0",
+        "magento/framework": "102.0.*||103.0.*",
+        "magento/module-backend": "101.0.*||102.0.*",
+        "magento/module-ui": "101.1.*||101.2.*",
+        "magento/module-config": "101.1.*||101.2.*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Stoneholl\\Core\\": ""
+        }
+    }
+}
