@@ -8,7 +8,7 @@ Core works offline and requires no Stoneholl account. It makes no API requests a
 Once the package is available on Packagist, run from your Magento root:
 
 ```sh
-composer require stoneholl/module-core:^1.0
+composer require stoneholl/magento2-core:^1.0
 bin/magento module:enable Stoneholl_Core
 bin/magento setup:upgrade
 bin/magento setup:di:compile
@@ -40,7 +40,7 @@ Connector also inherits the account link unless an Account URL Override is set. 
 
 ## For module developers
 
-Require `stoneholl/module-core`, declare `Stoneholl_Core` in `etc/module.xml`, and register a
+Require `stoneholl/magento2-core`, declare `Stoneholl_Core` in `etc/module.xml`, and register a
 [ProductProviderInterface](Api/ProductProviderInterface.php) implementation in `etc/di.xml` under
 [ProductRegistry](Model/ProductRegistry.php)'s `providers` argument. Each product needs a unique code and its installed module/package names.
 
@@ -51,3 +51,16 @@ Remove dependent modules before removing Core. Marketplace settings remain in Ma
 ## License
 
 [MIT](LICENSE).
+
+## Composer package naming
+
+The canonical Composer name is `stoneholl/magento2-core`. The former `stoneholl/module-core` name is a legacy identity. The renamed package replaces that identity at `self.version`, so Composer installs one copy of the Magento module. Existing immutable releases remain unchanged.
+
+When migrating an existing root requirement, back up the project and remove the old requirement without updating, then require the new package with its dependencies:
+
+```bash
+composer remove stoneholl/module-core --no-update
+composer require stoneholl/magento2-core --with-all-dependencies
+```
+
+Run the Magento upgrade, compilation and cache commands documented above according to your deployment mode. Keep native `Stoneholl_*` module names and configuration paths unchanged.

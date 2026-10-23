@@ -1,6 +1,0 @@
-<?xml version="1.0"?>
-<phpunit bootstrap="../../../../dev/tests/unit/framework/bootstrap.php" colors="true" cacheResult="false">
-    <testsuite name="Stoneholl Core Unit Tests">
-        <directory>Test/Unit</directory>
-    </testsuite>
-</phpunit>

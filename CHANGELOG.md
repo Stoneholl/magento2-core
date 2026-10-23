@@ -1,5 +1,12 @@
 # Changelog
 
+
+## 1.0.1 - 2026-10-23
+
+- Rename the Composer package to `stoneholl/magento2-core` and replace its corresponding legacy `stoneholl/module-core` identity at `self.version`.
+- Publish the new version as a runtime-only package; preserve the original immutable 1.0.0 release.
+- Keep Magento module identifiers, configuration, storage and licensing unchanged.
+
 ## 1.0.0 — 2026-10-18
 
 - Add permission-controlled marketplace navigation configuration and safe marketplace/suggestion links.

@@ -1,5 +1,5 @@
 {
-    "name": "stoneholl/module-core",
+    "name": "stoneholl/magento2-core",
     "description": "Offline shared administration and product registry infrastructure for Stoneholl Magento modules.",
     "type": "magento2-module",
     "license": "MIT",
@@ -17,5 +17,8 @@
         "psr-4": {
             "Stoneholl\\Core\\": ""
         }
+    },
+    "replace": {
+        "stoneholl/module-core": "self.version"
     }
 }
