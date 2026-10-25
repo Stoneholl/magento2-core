@@ -1,6 +1,6 @@
 {
     "name": "stoneholl/magento2-core",
-    "description": "Offline shared administration and product registry infrastructure for Stoneholl Magento modules.",
+    "description": "Offline shared administration and product registry infrastructure for Stoneholl Magento 2 modules.",
     "type": "magento2-module",
     "license": "MIT",
     "require": {
@@ -20,5 +20,16 @@
     },
     "replace": {
         "stoneholl/module-core": "self.version"
-    }
+    },
+    "keywords": [
+        "magento2",
+        "magento",
+        "magento 2",
+        "magento2 module",
+        "magento open source",
+        "admin",
+        "infrastructure",
+        "product registry",
+        "offline"
+    ]
 }
